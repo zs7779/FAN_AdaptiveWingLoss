@@ -256,7 +256,7 @@ def power_transform(img, power):
     img_new = Image.fromarray(img_new)
     return img_new
 
-def get_preds_fromhm(hm, center=None, scale=None, rot=None):
+def get_preds_fromhm(hm, center=None, scale=None, rot=0):
     max, idx = torch.max(
         hm.view(hm.size(0), hm.size(1), hm.size(2) * hm.size(3)), 2)
     idx += 1
@@ -280,8 +280,8 @@ def get_preds_fromhm(hm, center=None, scale=None, rot=None):
     if center is not None and scale is not None:
         for i in range(hm.size(0)):
             for j in range(hm.size(1)):
-                preds_orig[i, j] = transform(
-                    preds[i, j], center, scale, hm.size(2), rot, True)
+                preds_orig[i, j] = torch.from_numpy(transform(
+                    preds[i, j], center, scale, hm.size(2), rot, True))
 
     return preds, preds_orig
 
